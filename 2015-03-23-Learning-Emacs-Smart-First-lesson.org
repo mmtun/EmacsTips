@@ -1,0 +1,117 @@
+#+TITLE: Emacs入门系列：定制神器初体验
+#+OPTIONS: toc:nil
+
+没想到大家对于我的上一篇文章（[[http://www.jianshu.com/p/90d2189750e7][Emacs入门系列：3分钟学会Emacs基本操作]] ）这么喜欢。作为进入简书大家庭开始写作的一个新人，能得到这么多人的认可，真是让我受宠若惊。希望我的文章等给大家带来帮助，也请大家帮助我做好知识积累，让Emacs不负神器之名。
+
+* Emacs的一些基本概念
+
+  在对Emacs进行定制之前，我们需要对Emacs的一些基础概念进行定义。让我们引用一下Emacswiki上的图片来说明相关的概念
+
+  [[http://7xi454.com1.z0.glb.clouddn.com/2015-03-23-Learning-Emacs-Smart-First-lesson-Figure1.jpg]]
+
+  从图中我们看到几个概念：
+
+  * Window
+    在Emacs的中文帮助中，对名词window定义为“窗格”。对于名词Frame定义为“窗口”（也有译为“框架”）。在这里我不想纠结于英文翻译中的差别，只想说明他们之间的关系：
+    从上面的图中可以看出来，Window窗格是用户适用Emacs的主要交互接口。它占据了屏幕的90%以上的空间。几乎用户所有的文本编辑操作都是在这个窗格里进行的。
+  * Frame
+    相应的Frame则是一组窗格的集合。Emacs提供了多窗口并行操作的能力，因此可以适用Frame将各个“窗格”的对应位置管理起来。从这个角度上说，每一个Window多像窗户上的一各个“格子”。每个格子都可以拥有独立的显示内容。
+  * Buffer
+    在Emacs中Buffer翻译为“缓冲区”。当Emacs读取磁盘上的文件时，文件的内容就被读取到了一个缓冲区中供编辑适用。即，Buffer是在磁盘中存储的文件的一个供编辑的临时对象。
+  * minibuffer
+    minibuffer，实际上于buffer没有任何关系。它显示的内容不是磁盘上存储的文件的内容。minibuffer是供用户输入各类Emacs操作命令的地方。在编辑状态下，随时按下 ~Meta-x~ 输入光标即跳转到了minibuffer中，等待用户输入进一步的指令。虽然我们目前还不会使用任何的一个命令，不过没关系，我们很快就会进入这一部分章节。 
+    进入minibuffer后，如果相取消输入，按 ~三下ESC~ 或者 ~Ctrl-g~ 可以取消命令输入，从minibuffer重新跳回原先的操作窗格，继续文档编辑工作。
+
+    在我们进入更深的话题之前我们先来看看炫酷的Emacs：
+
+    [[http://7xi454.com1.z0.glb.clouddn.com/2015-03-23-Learning-Emacs-Smart-First-lesson-Figure2-flatland-black.png]]
+
+    以上面的图片为例，应用上面降到的概念，我们得出以下几个结论：
+
+    * 这个经过配置的Emacs Frame被分割成了三个窗格（window）。左边一个，右边两个
+    * 左边的窗格中显示的是名为“abbrevs.texi”的文件内容（想想看，我是如何知道这个的？）
+    * 在minibuffer中，用户刚刚按下了 ~Meta-x~ 键，Emacs正在等待用户输入后续命令。
+    * 这个Emacs的配置非常好看，我也想要这样的Emacs。
+
+
+* Emacs的帮助系统
+
+  我发表上一篇文章的时候，就有简友提示我应该首先将Emacs的帮助系统介绍给大家。关于这部分内容，我来开个头，说说在Emacs中获取帮助的一些方法。
+
+** 使用Emacs的内置教程
+
+   在Emacs发行版本中自带了教程。把这部分内容通读几遍，在按照上面说的操作几遍，Emacs的基本操作也就可以出师了（当然，我还是觉得我自己整理的那篇 [[http://www.jianshu.com/p/90d2189750e7][文章]] 写的更加简单易懂。只是由于篇幅所限，涵盖的内容没有内置教程那么宽泛）
+
+   在Emacs中呼叫内置教程的方法是按下紧急呼叫键 ~Ctrl-h t~ 。这个组合键的含义如果翻译成对话会是下面这个样子的：
+
+   #+BEGIN_QUOTE
+   场景描述： 小李飞刀在Emacs中不小心按下了 Ctrl-h （Ctrl 和 字母“h”键一起按下），Emacs接受到了命令，急忙跑过去问：
+
+   Emacs： 贵客需要什么？
+   飞刀： 呃，把那个啥菜单拿上来。
+   Emacs： 呃， 菜单？贵客，小店已经实施了电子化改造，您需要教程，按下字母键“t”，我们立即会收到您的订单，马上安排送货。
+   飞刀： “t”……是什么？
+   Emacs： 呃， t就是Tutorial。
+   飞刀：……， 这我还不知道，快去拿！
+   #+END_QUOTE
+
+** 查看Emacs函数说明
+
+   同样，Emacs可以对内置的函数提供说明文档，呼叫键为 ~Ctrl-h f~ 。您一定知道了字母键“f”代表的是Function
+
+** 查看Emacs的变量说明
+
+   Emacs可以对内置的变量提供说明文档，呼叫键为 ~Ctrl-h v~ 。嗯，“v”代表的是Variable，您说对了。
+
+* Emacs的定制化
+  
+** Emacs的定制入口
+
+   Emacs在启动时会按照固定的规则读取配置文件，调整界面元素的显示、操作快捷键的设定、加载对应的扩展功能模块等。正如那句名言所说“一千个人心里，有一千个哈姆雷特”，一千个人能配置出一万种Emacs来（每个人会结合不同的应用场景，按需调整Emacs的运行行为，这个是我说的哈。：P）。
+
+   Emacs的配置文件有两种方式：
+
+   1. 在用户Home目录中的 ~.emacs~ 文件
+
+      用户的Home目录，对于Unix/Linux/MacOSX的用户来说并不陌生。对于Windows用户来说，Home目录就是windows登录用户名对应的目录，一般来说是 ~c:\Users\<USERNAME>\~ 。
+
+      在这个目录中，文件名为 ~.emacs~ 就是Emacs的启动配置文件。文件的书写需要符合ELisp语言的语法要求。
+
+   2. 在用户Home目录中的 .emacs.d目录中的init.el文件
+
+      与适用 ~.emacs~ 文件的方式不同，~.emacs.d~ 目录作为存放Emacs配置文件的方式具有更大的灵活性。可以对Emacs的配置文件进行模块化管理，避免将所有的配置内容都堆放的一个文件中。 ~init.el~ 文件的扩展名说明了一个问题：配置文件的写法同样需要符合ELisp语言的语法要求。
+
+
+** Emacs的第一次定制
+
+   我们的第一次Emacs定制将对Emacs的界面要素进行定义。具体看下面的代码：
+
+   #+BEGIN_SRC emacs-lisp
+   ;; 设置tab space
+   (setq tab-width 4)
+ 
+   ;; 设置自动显示行号
+   (setq linum-format "%4d ") ;;设置行号显示格
+   (global-linum-mode t)
+
+   ;; 设置默认换行模式为“在窗口边缘自动换行”
+   (toggle-truncate-lines t)
+
+   ;; 高亮光标的当前行
+   (global-hl-line-mode 1)
+
+   (when (string-equal system-type "windows-nt")
+      "在Windows环境中关闭菜单条"
+   (menu-bar-mode -1))
+   ;; 关闭工具条
+   (tool-bar-mode -1)
+
+   ;; 关闭滚动条
+   ;;(scroll-bar-mode -1)
+   #+END_SRC
+
+   把上面的代码粘到你的Emacs配置文件中。Duang，你的Emacs和一开始有一些不一样呢！
+
+* 小结
+
+  我们今天开始了Emacs的配置之旅。第一步，很简单，也很重要。大家一定不解渴吧？下一次我们来一点酷一些的：我们来定制Emacs的Theme吧！期待~！
