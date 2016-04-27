@@ -1,0 +1,103 @@
+#+TITLE: 在Emacs中加密ORG Mode文件
+#+OPTIONS: toc:nil num:2
+
+* ORG Mode文件
+
+  ORG Mode是Emacs中的著名的一个“Major Mode”。和火热的Markdown类似，Org-Mode下，提供了一套纯文本的文档标记语法。可以书写出优美的文档。除了可以用作一类文档编制规范，Org mode还可以用作GTD工具、可以用来编写论文、提供了超级方便的表格编制功能，甚至还提供了“文学编程”的工具。ORG-Mode甚至获得了“神器”的称号。看看下面的图片，看看神器的面目吧：
+
+  #+BEGIN_CENTER
+  #+ATTR_HTML: :width 400px
+  [[file:images\2015-03-11-Encrypt-Your-Org-Files-Figure1.jpg]]
+  #+END_CENTER
+
+  有多少人是因为ORG-Mode而使用Emacs的？大家挥一挥手，让我看到你们！
+
+* 加密ORG文件中指定标题下的内容
+
+  在我的 [[http://www.jianshu.com/p/bd4266fb4551][“在Emacs中使用GPG加密文件”]] 中说了使用GPG加密整个文档的方法。同样的，也有一些情况下，我们不需要对整个文件进行加密，只需要加密一部分内容就能够满足安全性的要求。有没有这样的轻量级解决方案呢？
+
+  在EasyPG的基础上，org-crypt，为加密文件部分内容提供了解决方案。
+
+  在Emacs中启用org-crypt的方法很简单，将下面的代码添加到emacs配置文件中（例如.emacs）
+
+  #+BEGIN_SRC emacs-lisp
+  (require 'org-crypt)
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance (quote("crypt")))
+  (setq org-crypt-key nil)
+  #+END_SRC
+
+  这样所有打上了“crypt” Tag的标题下的所有内容都会被加密。
+
+  具体的内容解释如下：
+
+  1. (org-crypt-use-before-save-magic)
+
+     在每次保存文件是自动加密含有“Crypt”标签（Tag）的标题内容。
+
+  2. (setq org-tags-exclude-from-inheritance (quote("crypt")))
+
+     避免crypt标签继承，避免重复加密
+
+  3. (setq org-crypt-key nil)
+
+     使用对称加密算法完成加密。
+
+   
+  OK，重新启动Emacs，就可以对Org文件中需要加密的内容进行加解密了。具体的方法如下：
+
+  * 加密：
+
+    1. 为需要加密的标题添加crypt标签
+    2. 保存文件
+    3. 该标题下的所有内容都被加密了（包含子标题）
+  
+  * 解密：
+
+    1. 将光标移动到需要解密的标题上
+    2. M-x org-decrypt-entry
+    3. 解密后的内容将出现的Buffer中
+
+  * 取消加密：
+
+    为指定的标题删除crypt标签，并保存即可。
+
+  
+  此外，如果需要自己设定加密标签名的话，例如设定为"secret"（不含引号），可以在emacs配置文件中使用下面的代码：
+
+  #+BEGIN_SRC emacs-lisp
+  (setq org-crypt-tag-matcher "secret")
+  #+END_SRC
+
+* 一些安全漏洞的封堵
+
+  Emacs具有自动备份的机制，在使用需要加密的情况下，可能会对已解密的内容产生临时备份文件。这为加密内容的安全性带来了隐患。我们需要调整emacs的自动备份机制。
+
+  使用如下代码可以全面禁用自动备份功能：
+
+  #+BEGIN_SRC emacs-lisp
+  (setq auto-save-default nil)
+  #+END_SRC
+
+  如果仅仅需要在指定的文件中禁用自动备份功能，需要在文件头添加如下内容：
+
+  #+BEGIN_SRC 
+  # -*- buffer-auto-save-file-name: nil; -*-
+  #+END_SRC
+
+* 小结
+
+  本文介绍了org-crypt的使用方法。关于在Emacs下进行文件加密，目前已经写了两期了。这个话题目前会暂时告一段落。希望能为隐私数据的加密带来一些帮助。待我有了新的心得的时候，再拿出来和大家分享吧。
+
+  有兴趣的朋友可以去附录中“使用 gnupg 加密你的 org-mode 文章”的文章看看。coldnew做了一个gif的动图，会有一个更加直观的感受。（没有得到coldnew的授权，就不直接引用他的图片了：P）
+
+* 附录
+
+  * coldnew的博文
+    + 使用 gnupg 加密你的 org-mode 文章 ： http://coldnew.github.io/blog/2013/07/13_5b094.html
+    + 在 emacs 中使用 EasyPG 加密文章   ： http://coldnew.github.io/blog/2013/07/13_e2ccd.html
+  * GNU emacs手册
+    + EasyPG Assistant user's manual    ： http://www.gnu.org/software/emacs/manual/html_mono/epa.html
+  * Org Mode 手册
+    + org-crypt说明                     ： http://orgmode.org/org.html#org_002dcrypt
+
