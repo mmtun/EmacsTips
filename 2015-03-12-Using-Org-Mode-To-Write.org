@@ -1,0 +1,177 @@
+#+TITLE: 使用Org Mode进行写作
+#+OPTIONS: toc:nil
+
+* 为什么选择Org Mode
+
+  Org Mode是Emacs的一套语法规则。[[http://www.orgmode.org][OrgMode的官方网站]] 是这样介绍自己的：
+
+  #+BEGIN_QUOTE
+  Org mode is for keeping notes, maintaining TODO lists, planning projects, and authoring documents with a fast and effective plain-text system.
+  #+END_QUOTE
+
+  和Markdown的语法规则比较，Orgmode的语法规则更加严密，由于统一的开发团队维护，OrgMode采用了统一的语法规则，没有发展出不同“Flavor”的方言语法。因此与Markdown来比，具有更好的语法一致性。
+
+  和Python社区中著名的ReStructuredText语法定义相比，Org mode的语法更简单轻便，具有更好的易用性。
+
+  当然，更重要的是在Emacs中OrgMode不单单是一套基于文本格式的文档编写规范，还可以轻松的变身成为事务管理工具、项目管理工具、编程工具（文学编程——Literate programming）、高大上的研究报告编写工具（支持公式、表格、图表），甚至可以替代部分Excel的功能而成为财务计算工具。
+
+  可以说，使用OrgMode进行写作，学习成本付出之后是有更多的回报的。有多少朋友就是因为OrgMode而投入到了Emacs的阵营之中啊（嗯，必须承认，我也是因为这个才离开了Vim，投入到Emacs之中的）。
+
+* Org Mode 基本语法和使用
+
+  使用Org Mode进行写作，所需要的使用到的语法规则非常简单，根据我的体会记录如下：
+
+** 标题
+
+   Org Mode提供了多级标题定义的能力。具体如下：
+
+   #+BEGIN_SRC 
+   * 这是一级标题
+   ** 这是二级标题
+   *** 这是三级标题
+   **** 这是四级标题
+   ......
+   #+END_SRC
+
+   根据顶行使用的“*”的数量，几级标题使用几个“*”即定义了当前的标题是几级标题。
+
+   在Emacs中可以使用快捷键加速标题的设置
+
+   * TAB ：在标题上按下<TAB>键，可以折叠或展开，确定是否显示该标题下的所以内容（含子标题）
+   * Alt - Enter ： 快速建立同级标题（不用自己数星星啦）
+   * Alt - 方向键（左右）：快速提升或降低标题级别。该标题下的相关正文同步调整缩进
+   * Alt - 方向键（上下）：调整标题在文档中的位置。可连同子标题一起调整位置
+
+** 引用
+
+   在Org Mode中引用文字非常简单，按如下方式写即可：
+
+   #+BEGIN_SRC 
+   #+BEGIN_QUOTE
+   引用的文字
+   #+END_QUOTE
+   #+END_SRC
+
+** 超链接
+
+   Org Mode的超级链接定义如下：
+  
+   #+BEGIN_SRC 
+   形式1:  [[http://url][描述]]
+   形式2:  [[http://url]]
+   #+END_SRC
+
+   Org Mode支持多种不同的互联网协议，具体的协议列表可以看Org Mode的手册
+
+** 图片
+
+   本质上来说，图片也是一种超级链接。所以它的书写方式和链接很像：
+
+   #+BEGIN_SRC 
+   #+CAPTION: This is the caption for the next figure link 
+   #+NAME:   fig:SED-HR4049
+   [[link_to_image.jpg]]
+   #+END_SRC
+
+** 表格
+
+   Org Mode的表格功能异常强大。对于写作来说，仅仅使用到了表格的快速编制的功能。要知道，在文本格式下，目前我还没有看到那个软件可以相Emacs + Org Mode 这样方便快捷的。
+
+   * 创建表格，
+     1. 输入下属内容：
+      #+BEGIN_SRC 
+      | This | is | My | First | table |
+      |-
+      #+END_SRC
+     2. 按下<TAB>，Emacs 自动为你创建好了表格：
+      #+BEGIN_SRC 
+      | This | is | My | First | table |
+      |------+----+----+-------+-------|
+      |      |    |    |       |       |
+      #+END_SRC
+   * 编辑表格：
+     使用<TAB>键，可以在各个格子之中灵活跳转。在到达行尾之后继续按下<tab>会创建新的行供继续输入
+
+   *说明* ： 遗憾的是目前OrgMode在输出为Markdown是貌似对表格的支持不对，生成了一堆HTML代码。咋办？
+   
+** 列表
+
+   在非顶行的情况下，*、+、-、可以成为非编号列表的标记：
+
+   #+BEGIN_SRC 
+     * 列表项1
+         + 子列表项
+     * 列表项2
+         1. 子列表项
+     * 列表项3
+   #+END_SRC
+
+   使用数字，则可以成为带编号的列表：
+
+   #+BEGIN_SRC 
+     1. 列表项1
+        * 子列表项
+     2. 列表项2
+   #+END_SRC
+
+   在Emacs中使用列表项后的快捷键：
+
+   * Alt - 方向键（左右）：调整列表项的缩进
+   * Alt - Enter:  在现有列表项下创建新的列表，非编号的自动创建非编号项，带编号的自动创建新的编号项并自动调整相关编号号码。
+
+** 特殊格式
+
+   * 加粗：
+     #+BEGIN_SRC 
+     *加粗*   
+     #+END_SRC
+   * 下划线：
+     #+BEGIN_SRC 
+     _下划线_
+     #+END_SRC
+   * 删除线 
+     #+BEGIN_SRC 
+     _下划线_
+     #+END_SRC
+   * 斜体
+     #+BEGIN_SRC 
+     /斜体/
+     #+END_SRC
+   * 下标
+     #+BEGIN_SRC 
+     H_2O  ：水的分子式
+     #+END_SRC
+   * 上标
+     #+BEGIN_SRC 
+     E=mc^2
+     #+END_SRC
+   * 行内代码（等宽字）
+     #+BEGIN_SRC 
+     =#include <stdio.h>= 或者 ~#include <stdio.h>~
+     #+END_SRC
+
+* 输出Org Mode到Markdown
+
+  Org Mode完成写作之后，可以非常方便的将文档转换成其他格式，例如Markdown。看截图：
+
+  [[http://ww2.sinaimg.cn/bmiddle/62603e87jw1eq315hb6rkj20nl0j0q5q.jpg]]
+
+  从上面的截图可以看到，Org Mode可以支持输出到iCalendar/HTML/LaTex/Markdown/Plain Text等多种格式。实际上，Org Mode还可以支持更多的文档输出格式，这里就不一一介绍了。
+
+  默认情况下，Org Mode没有打开Markdown文档的转换功能，需要将下面的小代码放到Emacs 的启动配置文件中：
+
+  #+BEGIN_SRC emacs-lisp
+  (setq org-export-backends (quote (ascii html icalendar latex md)))
+  #+END_SRC
+
+  能输入到Markdown，那么不就可以方便的将文档发布到 [[www.jianshu.com][简书]] 了？
+
+  在每一篇文章前加入下面的控制代码， 能更好的符合 简书 的Markdown语法规范
+
+  #+BEGIN_SRC 
+  #+OPTIONS: toc:nil
+  #+END_SRC
+
+  哈哈，鱼与熊掌可以兼得啊！
+
+  哦，One More Thing，发动文档转化的快捷键是按顺序按下下面的组合键（Ctrl-c Ctrl-e）。：）
