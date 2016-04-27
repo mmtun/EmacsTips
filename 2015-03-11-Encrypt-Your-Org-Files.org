@@ -7,7 +7,7 @@
 
   #+BEGIN_CENTER
   #+ATTR_HTML: :width 400px
-  [[file:images\2015-03-11-Encrypt-Your-Org-Files-Figure1.jpg]]
+  [[file:images/2015-03-11-Encrypt-Your-Org-Files-Figure1.jpg]]
   #+END_CENTER
 
   有多少人是因为ORG-Mode而使用Emacs的？大家挥一挥手，让我看到你们！
