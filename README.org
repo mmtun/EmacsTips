@@ -1,0 +1,7 @@
+#+SETUPFILE: SETUP.org
+
+#+TITLE: Emacs Tips 自述
+
+Emacs Tips是我近期启动的一个个人项目。用于记录我在使用Emacs的过程中所遇到问题的各种解决方案。也算是我在使用Emacs过程中知识的一个积累工具。
+
+Emacs Tips主要在 [[http://jianshu.com][简书]] 发布。有需要的可以去关注我在简书的专辑。这里是我书写的文章的一个项目版本管理仓库。
